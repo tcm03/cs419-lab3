@@ -37,18 +37,24 @@ def retrieve_documents(query, tfidf, idf, term2id, doc2id, documents):
     return retrieved_docs
 
 
-def search_query(query, tfidf, idf, term2id, doc2id, id2doc, documents, top_k=None):
+def search_query(query, tfidf, idf, term2id, doc2id, id2doc, documents, top_k=10):
     articles = get_data()
     retrieved_docs = retrieve_documents(query, tfidf, idf, term2id, doc2id, documents)
     results = []
+    top_k = min(top_k, len(retrieved_docs))
     for sim, did in retrieved_docs[:top_k]:
+        if sim == 0.:
+            continue
         title = id2doc[did]
         for article in articles:
             if article['postId'] == title:
                 results.append({
                     'title': article['title'],
                     'snippet': article['content'][:500],
-                    'similarity': sim
+                    'similarity': sim,
+                    'author': article['author'],
+                    'date': article['date'],
+                    'url': article['url']
                 })
     return results
 
