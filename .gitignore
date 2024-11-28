@@ -1,0 +1,6 @@
+__pycache__
+VnCoreNLP-1.2.jar.*
+dict.json
+documents.json
+scores.npz
+models/

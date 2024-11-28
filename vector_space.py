@@ -1,7 +1,7 @@
 import numpy as np
 import math
 import json
-from preprocess import text_preprocessing
+from preprocess import text_preprocessing, get_data
 
 
 def vectorize_query(query, term2id, idf):
@@ -38,16 +38,18 @@ def retrieve_documents(query, tfidf, idf, term2id, doc2id, documents):
 
 
 def search_query(query, tfidf, idf, term2id, doc2id, id2doc, documents, top_k=None):
+    articles = get_data()
     retrieved_docs = retrieve_documents(query, tfidf, idf, term2id, doc2id, documents)
     results = []
     for sim, did in retrieved_docs[:top_k]:
         title = id2doc[did]
-        content_snippet = ' '.join(documents[title].split()[:50])  # Get the first 50 words
-        results.append({
-            'title': title,
-            'snippet': content_snippet,
-            'similarity': sim
-        })
+        for article in articles:
+            if article['postId'] == title:
+                results.append({
+                    'title': article['title'],
+                    'snippet': article['content'][:500],
+                    'similarity': sim
+                })
     return results
 
 def main():

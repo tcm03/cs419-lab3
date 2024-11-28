@@ -50,14 +50,18 @@ def text_preprocessing(text):
   text = remove_stopwords(text)
   return text
 
+def get_data():
+  articles = []
+  with open('new_data.json', encoding = 'utf-8') as f:
+    articles = json.load(f)
+  return articles
+
 def preprocess():
     documents = {}
-    with open('data.json', encoding = 'utf-8') as f:
-        data = json.load(f)
-        for category, articles in data.items():
-            for article in articles:
-                content = article['title'] + ' ' + article['content']
-                documents[article['postId']] = text_preprocessing(content)
+    articles = get_data()
+    for article in articles:
+      content = article['title'] + ' ' + article['content']
+      documents[article['postId']] = text_preprocessing(content)
 
     # write all documents into a json file
     with open('documents.json', 'w', encoding = 'utf-8') as f:
